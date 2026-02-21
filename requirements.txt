@@ -1,0 +1,6 @@
+flask
+flask-login
+opencv-contrib-python
+numpy
+pandas
+openpyxl
