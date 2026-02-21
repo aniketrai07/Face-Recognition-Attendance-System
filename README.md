@@ -56,5 +56,5 @@ A full-stack AI-powered Face Recognition Attendance Web Application built using:
 
 \## 👨‍💻 Author
 
-Aniket Rai
+Aniket Kumar Rai
 
