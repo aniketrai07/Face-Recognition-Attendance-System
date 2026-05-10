@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: face-attendance
+  namespace: face-attendance
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: face-attendance
+  template:
+    metadata:
+      labels:
+        app: face-attendance
+    spec:
+      containers:
+      - name: face-attendance
+        image: aniketrai07/face-attendance:v1
+        ports:
+        - containerPort: 5000
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 15
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: face-attendance-service
+  namespace: face-attendance
+spec:
+  selector:
+    app: face-attendance
+  ports:
+  - port: 80
+    targetPort: 5000
+  type: NodePort

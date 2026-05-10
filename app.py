@@ -1,4 +1,5 @@
 import os, cv2, numpy as np, pandas as pd
+from prometheus_flask_exporter import PrometheusMetrics
 from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, jsonify, send_file
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user
@@ -6,7 +7,7 @@ from werkzeug.utils import secure_filename
 
 # ========= CONFIG =========
 USERNAME = "admin"
-PASSWORD = "ad"
+PASSWORD = "admin"
 
 DATASET_PATH = "dataset"
 MODEL_DIR = "models"
@@ -88,6 +89,7 @@ if os.listdir(DATASET_PATH) and not os.path.exists(MODEL_FILE):
 
 # ========= FLASK APP =========
 app = Flask(__name__)
+metrics = PrometheusMetrics(app)
 app.secret_key = "super-secret-key-change-me"
 
 # ========= LOGIN =========
@@ -107,6 +109,10 @@ def load_user(user_id):
 @app.route("/", methods=["GET"])
 def home():
     return redirect(url_for("dashboard"))
+
+@app.route("/health")
+def health():
+    return {"status": "healthy"}, 200
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -329,4 +335,4 @@ def export_range():
     return send_file(file, as_attachment=True)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=False)
